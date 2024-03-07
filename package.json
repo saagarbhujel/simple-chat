@@ -1,0 +1,17 @@
+{
+  "name": "web-shocket",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.3",
+    "socket.io": "^4.7.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

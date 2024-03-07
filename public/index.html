@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Chat App</title>
+        <style>
+            body {
+                font-family: poppins;
+            }
+            /* Style for the chat messages */
+            #message {
+                list-style: none;
+                margin: 0;
+                padding: 10px;
+                height: 75vh; /* Set the height of the chat box */
+                overflow-y: scroll; /* Enable vertical scrolling */
+            }
+
+            #message li {
+                margin-bottom: 10px;
+                padding: 10px;
+                border-radius: 10px;
+                background-color: #f0f0f0;
+                clear: both; /* Clear the floats */
+                max-width: 40%;
+            }
+
+            /* Style for the user's own messages */
+            #message li.own-message {
+                background-color: #b2d8b2; /* Light green */
+                float: right; /* Align own messages to the right */
+                max-width: 40%;
+            }
+
+            /* Style for the user's messages */
+            #message li.user-message {
+                background-color: #e6e6e6; /* Light gray */
+                float: left;
+                max-width: 40%; /* Align user messages to the left */
+            }
+
+            /* Style for the input and send button */
+            #input {
+                width: 80%;
+                margin-bottom: 10px;
+                height: 30px;
+            }
+
+            #send {
+                width: 18%;
+                height: 35px;
+                background: blue;
+                color: white;
+                border: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1>Chatting</h1>
+        </div>
+
+        <ul id="message"></ul>
+
+        <div>
+            <input type="text" id="input" />
+            <button type="submit" id="send">Send</button>
+        </div>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            const socket = io();
+            const input = document.getElementById("input");
+            const sendBtn = document.getElementById("send");
+            const message = document.getElementById("message");
+
+            sendBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const message = input.value;
+                // console.log(message);
+                socket.emit("user-message", message);
+                input.value = "";
+            });
+
+            socket.on("message", (msg) => {
+                const item = document.createElement("li");
+                if (msg.id == socket.id) {
+                    item.textContent = msg.message;
+                    item.classList.add("own-message");
+                } else {
+                    item.textContent = msg.message;
+                    item.classList.add("user-message");
+                }
+                message.appendChild(item);
+                window.scrollTo(0, document.body.scrollHeight);
+                // console.log(msg.id, socket.id);
+            });
+        </script>
+    </body>
+</html>
